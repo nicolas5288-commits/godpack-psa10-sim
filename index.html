@@ -4,114 +4,97 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>GodPack PSA 10 抽卡模擬器</title>
-  <meta name="description" content="撕開 GodPack，每一包都是 PSA 10 鑑定卡。免費體驗版，抽到什麼全看手氣。" />
-  <meta name="theme-color" content="#050505" />
+  <meta name="description" content="3D 撕開 GodPack，每一包都是 PSA 10 鑑定卡。免費體驗版，抽到什麼全看手氣。" />
+  <meta name="theme-color" content="#050508" />
   <meta property="og:title" content="GodPack PSA 10 抽卡模擬器" />
-  <meta property="og:description" content="撕開 GodPack，每一包都是 PSA 10 鑑定卡。抽到什麼全看手氣。" />
-  <meta property="og:image" content="assets/godpack-front.webp" />
-  <link rel="icon" href="assets/godpack-logo.png" />
-  <link rel="preconnect" href="https://storage.googleapis.com" crossorigin />
-  <link rel="stylesheet" href="style.css?v=3" />
+  <meta property="og:description" content="3D 撕開 GodPack，每一包都是 PSA 10 鑑定卡。抽到什麼全看手氣。" />
+  <meta property="og:image" content="assets/pack-art.webp" />
+  <link rel="icon" href="assets/gp-logo.webp" />
+  <link rel="stylesheet" href="opening3d.css?v=5" />
+  <link rel="stylesheet" href="style.css?v=5" />
 </head>
 <body>
-  <header class="gp-header">
-    <div class="gp-brand">
-      <img src="assets/godpack-logo.png" alt="GodPack" />
+  <header class="sim-header">
+    <div class="sim-brand">
+      <img src="assets/gp-logo.webp" alt="GodPack" />
       <div>
         <div class="t">GODPACK <em>PSA 10</em> SIM</div>
-        <div class="sub">抽卡模擬器 · 免費體驗</div>
+        <div class="sub">3D 抽卡模擬器 · 免費體驗</div>
       </div>
     </div>
-    <div class="gp-stats">
+    <div class="sim-stats">
       <div>已開<b id="st-count">0</b></div>
       <div class="gold">總市值<b id="st-total">$0</b></div>
       <div class="hide-m">最高單抽<b id="st-best">—</b></div>
     </div>
-    <div style="display:flex;gap:6px">
-      <button class="gp-iconbtn" id="btn-odds" title="賠率">賠率</button>
-      <button class="gp-iconbtn" id="btn-mute" title="音效">🔊</button>
+    <div class="sim-tools">
+      <button class="sim-iconbtn" id="btn-odds" title="賠率">賠率</button>
+      <button class="sim-iconbtn" id="btn-mute" title="音效">🔊</button>
     </div>
   </header>
 
-  <main class="gp-main" id="main">
-    <!-- 首頁 -->
-    <section class="gp-screen on" id="scr-home">
-      <div class="gp-kicker">Every pull is a PSA 10</div>
-      <h1 class="gp-h1">每一包都是 <em>PSA 10</em></h1>
-      <p class="gp-lead">撕開卡包、翻開鑑定磚，看看今天手氣能抽到哪張 GEM MINT 10。卡價全部是真實市價。</p>
-      <div class="gp-pack-hero godpack-float" id="home-pack">
-        <img src="assets/godpack-front.webp" alt="GodPack" />
-      </div>
-      <div class="gp-price-row"><span class="p" id="home-price">$99</span><span class="n">/ PACK · 模擬不收費</span></div>
-      <div class="gp-btn-row"><button class="gp-btn" id="btn-open">撕一包</button></div>
-      <div class="gp-odds" id="home-odds"></div>
-    </section>
-
-    <!-- 撕包 -->
-    <section class="gp-screen" id="scr-rip">
-      <div class="gp-rip-stage" id="rip-stage">
-        <div class="godpack-flash" id="rip-flash"></div>
-        <div class="gp-pack-group godpack-float" id="pack-group">
-          <div class="gp-cavity"><div class="card-tip"></div><div class="gp-cavity-glow" id="cavity-glow"></div></div>
-          <div class="gp-pack-layer gp-pack-body" id="pack-body"><img src="assets/godpack-front.webp" alt="" /></div>
-          <div class="gp-pack-layer gp-pack-top" id="pack-top"><img src="assets/godpack-front.webp" alt="" /></div>
-          <div class="gp-tear-line" id="tear-line"></div>
-          <div class="gp-tear-zone" id="tear-zone"></div>
-        </div>
-        <div class="gp-rise-host" id="rise-host"></div>
-        <div class="gp-hint godpack-hint-pulse" id="rip-hint">按住撕口<span class="godpack-arrow"></span>往右滑開</div>
-        <div class="gp-btn-row"><button class="gp-btn ghost sm" id="btn-autotear">直接撕開</button></div>
-      </div>
-    </section>
-
-    <!-- 翻卡 -->
-    <section class="gp-screen" id="scr-reveal">
-      <div class="gp-reveal" id="reveal-root">
-        <div class="gp-rays" id="rays"></div>
-        <div class="gp-flip-wrap" id="flip-wrap">
-          <div class="gp-flip-outer" id="flip-outer">
-            <div class="gp-flip-inner" id="flip-inner">
-              <div class="gp-face gp-face-back" id="face-front-card"></div>
-              <div class="gp-face gp-face-front" id="face-back-card"></div>
-              <div class="gp-slab-edge l"></div>
-              <div class="gp-slab-edge r"></div>
-            </div>
-          </div>
-        </div>
-        <div class="gp-hint godpack-hint-pulse" id="flip-hint">點一下翻面</div>
-        <div class="gp-result godpack-rise" id="result" hidden>
-          <div class="name" id="r-name"></div>
-          <div class="meta" id="r-meta"></div>
-          <div class="value" id="r-value">$0</div>
-          <div class="mult" id="r-mult"></div>
-          <div><span class="rar" id="r-rar"></span></div>
-          <div class="gp-btn-row">
-            <button class="gp-btn" id="btn-again">再撕一包</button>
-            <button class="gp-btn ghost" id="btn-home">回首頁</button>
-          </div>
-        </div>
-      </div>
-    </section>
+  <!-- 首頁 -->
+  <main class="sim-main" id="scr-home">
+    <div class="sim-kicker">Every pull is a PSA 10</div>
+    <h1 class="sim-h1">每一包都是 <em>PSA 10</em></h1>
+    <p class="sim-lead">3D 撕開卡包、拉出鑑定磚，看看今天手氣能抽到哪張 GEM MINT 10。卡價全部是真實市價。</p>
+    <div class="sim-pack-hero" id="home-pack">
+      <img src="assets/pack-art.webp" alt="GodPack" />
+    </div>
+    <div class="sim-price-row"><span class="p" id="home-price">$99</span><span class="n">/ PACK · 模擬不收費</span></div>
+    <div class="sim-btn-row"><button class="sim-btn" id="btn-open">撕一包</button></div>
+    <div class="sim-odds" id="home-odds"></div>
   </main>
 
-  <aside class="gp-collection">
+  <!-- 3D 開包舞台 -->
+  <section class="sim-stage" id="scr-stage" hidden>
+    <div class="gp-root" id="gp-root">
+      <div class="gp-layer gp-layer--fill">
+        <div class="gp-float" id="gp-float">
+          <div class="gp-float__canvas" id="gp-canvas"></div>
+          <div class="gp-float__probe" id="gp-probe" aria-hidden="true"></div>
+          <div class="gp-float__hint" id="gp-hint"></div>
+        </div>
+      </div>
+      <div class="gp-layer gp-layer--ui" id="gp-ui">
+        <div class="gp-reveal" id="gp-reveal" style="pointer-events:none"></div>
+      </div>
+    </div>
+    <div class="sim-stage-top">
+      <button class="sim-btn ghost sm" id="btn-auto">直接開</button>
+      <button class="sim-btn ghost sm" id="btn-exit">✕</button>
+    </div>
+    <div class="sim-info" id="info" hidden>
+      <div class="name" id="r-name"></div>
+      <div class="meta" id="r-meta"></div>
+      <div class="value" id="r-value">$0</div>
+      <div class="mult" id="r-mult"></div>
+      <div class="sim-btn-row">
+        <button class="sim-btn" id="btn-again">再撕一包</button>
+        <button class="sim-btn ghost" id="btn-home">回首頁</button>
+      </div>
+    </div>
+  </section>
+
+  <aside class="sim-collection" id="collection">
     <div class="head">
       <span>我的收藏 <b id="col-total">$0</b></span>
       <button id="btn-clear">清空</button>
     </div>
-    <div class="gp-strip" id="strip"><span class="empty">還沒抽到任何卡，撕一包試試</span></div>
+    <div class="sim-strip" id="strip"><span class="empty">還沒抽到任何卡，撕一包試試</span></div>
   </aside>
 
-  <div class="gp-modal" id="modal-odds">
+  <div class="sim-modal" id="modal-odds">
     <div class="box">
       <h3>抽卡賠率</h3>
       <table id="odds-table"></table>
       <p>每一張都是 PSA 10（GEM MINT 10）鑑定卡。卡價取自 PriceCharting 近期市價（美元），只作模擬展示，不販售、不代表真實抽卡結果。</p>
-      <div class="gp-btn-row"><button class="gp-btn ghost sm" id="btn-odds-close">關閉</button></div>
+      <div class="sim-btn-row"><button class="sim-btn ghost sm" id="btn-odds-close">關閉</button></div>
     </div>
   </div>
 
-  <script src="cards.js?v=3"></script>
-  <script src="app.js?v=3"></script>
+  <script src="opening3d.bundle.js?v=5"></script>
+  <script src="cards.js?v=5"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>

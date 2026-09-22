@@ -1,0 +1,1092 @@
+/**
+ * Self-contained styles for the GodPack animation components.
+ * Intentionally plain CSS rather than Tailwind utilities: the foil, blend modes
+ * and keyframes are hard to express as utilities, and a single file drops into
+ * any host app with no config. Import it once from your app entry.
+ */
+
+.gp-root {
+  --gp-rarity: #a8a29e;
+  --gp-accent: #e7e5e4;
+  --gp-secondary: #78716c;
+  --gp-card-w: clamp(200px, 46vw, 310px);
+  /* The card fills 77% of the slab width, and the slab is nearly twice as tall
+     as the card is wide — so it has to be capped against the viewport too. */
+  --gp-slab-w: min(calc(var(--gp-card-w) / 0.77), 38vh);
+  --gp-radius: 18px;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #050508;
+  color: #eef1f6;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  isolation: isolate;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gp-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.gp-layer--fill {
+  width: 100%;
+  height: 100%;
+}
+
+.gp-layer--ui {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.gp-layer--ui > * {
+  pointer-events: auto;
+}
+
+/* Fills the stage so the rays, aura and rarity banner position against the
+   viewport rather than shrink-wrapping to the card. */
+.gp-reveal {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* ------------------------------------------------------------------ card */
+
+.gp-card {
+  position: relative;
+  width: var(--gp-card-w);
+  aspect-ratio: 5 / 7;
+  perspective: 1400px;
+  flex: none;
+  /* Card text scales with the card, not the viewport, so the same component
+     works at hero size and in the summary grid. */
+  container-type: inline-size;
+}
+
+.gp-card__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateY(var(--gp-flip, 180deg)) rotateX(calc(var(--gp-ty, 0) * -9deg))
+    rotateZ(calc(var(--gp-tx, 0) * 1.5deg));
+  transition: transform 700ms cubic-bezier(0.16, 0.9, 0.28, 1);
+  will-change: transform;
+}
+
+.gp-card--instant .gp-card__inner {
+  transition: none;
+}
+
+.gp-card__face {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--gp-radius);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--gp-rarity) 55%, transparent),
+    0 18px 46px -12px rgba(0, 0, 0, 0.9),
+    0 0 var(--gp-glow, 0px) color-mix(in srgb, var(--gp-rarity) 65%, transparent);
+}
+
+/* ------------------------------------------------------------- card front */
+
+.gp-card__front {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--gp-rarity) 26%, #171307), #0a0906 62%);
+  padding: 5.5%;
+  gap: 0;
+}
+
+.gp-card__art {
+  position: relative;
+  border-radius: calc(var(--gp-radius) - 8px);
+  overflow: hidden;
+  background: #050508;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gp-accent) 30%, transparent);
+}
+
+.gp-card__art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gp-card__art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(5, 5, 8, 0.85), transparent 42%);
+  pointer-events: none;
+}
+
+.gp-card__plate {
+  padding-top: 6%;
+  display: grid;
+  gap: 2px;
+}
+
+.gp-card__name {
+  font-size: clamp(13px, 4.6cqw, 19px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.gp-card__subtitle {
+  font-size: clamp(9px, 3cqw, 12px);
+  color: #b3ada0;
+  font-style: italic;
+  line-height: 1.25;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.gp-card__rail {
+  margin-top: 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: clamp(7px, 2.4cqw, 10px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8b93a3;
+  border-top: 1px solid color-mix(in srgb, var(--gp-accent) 20%, transparent);
+  padding-top: 4%;
+}
+
+.gp-card__rarity-label {
+  color: var(--gp-rarity);
+  font-weight: 700;
+}
+
+.gp-card__gem {
+  position: absolute;
+  top: 5.5%;
+  right: 5.5%;
+  width: 11%;
+  aspect-ratio: 1;
+  background: linear-gradient(145deg, var(--gp-accent), var(--gp-rarity) 45%, var(--gp-secondary));
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--gp-rarity) 70%, transparent);
+  z-index: 3;
+}
+
+/* ------------------------------------------------------------- card back */
+
+.gp-card__back {
+  transform: rotateY(180deg);
+  background:
+    radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--gp-accent) 34%, transparent), transparent 58%),
+    conic-gradient(
+      from 45deg at 50% 42%,
+      #241d0e,
+      #3a3016 25%,
+      #241d0e 50%,
+      #4a3c18 75%,
+      #241d0e
+    ),
+    #120e06;
+  display: grid;
+  place-items: center;
+}
+
+.gp-card__back::before {
+  content: "";
+  position: absolute;
+  inset: 7%;
+  border-radius: calc(var(--gp-radius) - 10px);
+  border: 1px solid rgba(217, 164, 65, 0.35);
+}
+
+.gp-card__back-mark {
+  width: 34%;
+  aspect-ratio: 1;
+  background: linear-gradient(160deg, #ffe9b0, #d9a441 55%, #7a5a1e);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  box-shadow: 0 0 26px rgba(217, 164, 65, 0.55);
+}
+
+/* --------------------------------------------------------------- holo foil */
+
+.gp-card__foil,
+.gp-card__glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: var(--gp-radius);
+  z-index: 4;
+}
+
+.gp-card__foil {
+  opacity: var(--gp-foil, 0);
+  background-image:
+    repeating-linear-gradient(
+      112deg,
+      transparent 0%,
+      rgba(255, 119, 115, 0.38) 7%,
+      rgba(255, 237, 95, 0.32) 13%,
+      rgba(168, 255, 95, 0.32) 19%,
+      rgba(255, 214, 131, 0.32) 25%,
+      rgba(255, 183, 120, 0.38) 31%,
+      transparent 38%
+    ),
+    repeating-linear-gradient(
+      -50deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.16) 4%,
+      transparent 9%
+    );
+  background-size: 190% 190%, 140% 140%;
+  background-position:
+    calc(28% + var(--gp-tx, 0) * 34%) calc(28% + var(--gp-ty, 0) * 34%),
+    calc(50% - var(--gp-tx, 0) * 22%) calc(50% - var(--gp-ty, 0) * 22%);
+  mix-blend-mode: color-dodge;
+  filter: saturate(1.35) contrast(1.1);
+}
+
+.gp-card__glare {
+  background: radial-gradient(
+    circle at calc(50% + var(--gp-tx, 0) * 42%) calc(50% + var(--gp-ty, 0) * 42%),
+    rgba(255, 255, 255, 0.55),
+    rgba(255, 255, 255, 0.09) 26%,
+    transparent 58%
+  );
+  mix-blend-mode: overlay;
+  opacity: var(--gp-glare, 0.5);
+}
+
+/* One-shot sheen that sweeps across the card the moment it lands face-up. */
+.gp-card--revealing .gp-card__front::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: linear-gradient(
+    108deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.72) 47%,
+    rgba(255, 255, 255, 0.9) 50%,
+    transparent 60%
+  );
+  animation: gp-sheen 900ms cubic-bezier(0.3, 0, 0.2, 1) 120ms both;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+@keyframes gp-sheen {
+  from {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  to {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+
+/* ------------------------------------------------------------ celebration */
+
+.gp-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, #ffffff, color-mix(in srgb, var(--gp-accent) 70%, #fff) 45%, transparent 72%);
+  animation: gp-flash 620ms ease-out both;
+}
+
+@keyframes gp-flash {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.gp-shake {
+  animation: gp-shake 520ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes gp-shake {
+  10%,
+  90% {
+    translate: -2px 1px;
+  }
+  20%,
+  80% {
+    translate: 4px -2px;
+  }
+  30%,
+  50%,
+  70% {
+    translate: -7px 3px;
+  }
+  40%,
+  60% {
+    translate: 7px -3px;
+  }
+}
+
+/* ---------------------------------------------------------------- banners */
+
+.gp-banner {
+  position: absolute;
+  left: 50%;
+  translate: -50%;
+  z-index: 20;
+  text-align: center;
+  pointer-events: none;
+  text-transform: uppercase;
+}
+
+.gp-banner--rarity {
+  top: 10%;
+  font-size: clamp(18px, 5vw, 34px);
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  color: var(--gp-accent);
+  text-shadow:
+    0 0 18px color-mix(in srgb, var(--gp-rarity) 90%, transparent),
+    0 0 60px color-mix(in srgb, var(--gp-rarity) 70%, transparent);
+  animation: gp-banner-in 620ms cubic-bezier(0.16, 0.9, 0.28, 1) both;
+}
+
+.gp-banner--god {
+  top: 14%;
+  font-size: clamp(30px, 11vw, 92px);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  background: linear-gradient(180deg, #fffbeb, #fcd34d 45%, #f59e0b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 26px rgba(252, 211, 77, 0.75));
+  animation: gp-banner-in 800ms cubic-bezier(0.16, 0.9, 0.28, 1) both;
+}
+
+@keyframes gp-banner-in {
+  from {
+    opacity: 0;
+    scale: 0.7;
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+/* --------------------------------------------------------------- controls */
+
+.gp-controls {
+  position: absolute;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  left: 50%;
+  translate: -50%;
+  z-index: 30;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.gp-btn {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(16, 14, 10, 0.72);
+  backdrop-filter: blur(12px);
+  color: #eef1f6;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 9px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    scale 160ms ease;
+}
+
+.gp-btn:hover {
+  background: rgba(38, 32, 20, 0.86);
+  border-color: rgba(255, 255, 255, 0.34);
+}
+
+.gp-btn:active {
+  scale: 0.96;
+}
+
+.gp-btn:focus-visible {
+  outline: 2px solid var(--gp-accent);
+  outline-offset: 3px;
+}
+
+.gp-btn--primary {
+  background: linear-gradient(140deg, var(--gp-rarity), var(--gp-secondary));
+  border-color: color-mix(in srgb, var(--gp-accent) 60%, transparent);
+  color: #050508;
+  font-weight: 800;
+  padding: 12px 28px;
+  box-shadow: 0 8px 30px -6px color-mix(in srgb, var(--gp-rarity) 70%, transparent);
+}
+
+.gp-hint {
+  position: absolute;
+  bottom: 22%;
+  left: 50%;
+  translate: -50%;
+  z-index: 20;
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #8b93a3;
+  pointer-events: none;
+  animation: gp-hint-pulse 2s ease-in-out infinite;
+}
+
+@keyframes gp-hint-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* --------------------------------------------------------------- progress */
+
+.gp-progress {
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top));
+  left: 50%;
+  translate: -50%;
+  z-index: 30;
+  display: flex;
+  gap: 6px;
+}
+
+.gp-progress__pip {
+  width: 22px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.16);
+  transition: background 240ms ease;
+}
+
+.gp-progress__pip[data-done="true"] {
+  background: var(--gp-rarity);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--gp-rarity) 80%, transparent);
+}
+
+/* ---------------------------------------------------------------- summary */
+
+.gp-summary {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  padding: 26px 18px 96px;
+  overflow-y: auto;
+  background: radial-gradient(circle at 50% 38%, rgba(14, 12, 8, 0.9), rgba(5, 5, 8, 0.97) 70%);
+}
+
+/* Auto margins centre the content when it fits, but unlike
+   justify-content: center they never push the top out of the
+   scrollable area when it overflows (mobile). */
+.gp-summary__logo {
+  margin-top: auto;
+  width: clamp(150px, 42vw, 300px);
+  height: auto;
+  flex-shrink: 0;
+  user-select: none;
+  filter: drop-shadow(0 0 22px rgba(217, 164, 65, 0.35));
+}
+
+.gp-summary__tagline {
+  flex-shrink: 0;
+}
+
+.gp-summary > .gp-btn {
+  margin-bottom: auto;
+  flex-shrink: 0;
+}
+
+.gp-summary__tagline {
+  font-size: clamp(15px, 3.6vw, 22px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #eee6d2;
+  text-shadow: 0 0 18px rgba(217, 164, 65, 0.4);
+}
+
+.gp-summary__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 14px;
+  width: min(100%, 780px);
+  --gp-card-w: 100%;
+}
+
+.gp-summary__grid .gp-card {
+  width: 100%;
+}
+
+/* ------------------------------------------------------ floating pack */
+
+.gp-float {
+  --gp-pack-w: calc(var(--gp-slab-w) / 0.84);
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      color-mix(in srgb, var(--gp-tear-color) 18%, transparent),
+      transparent 58%
+    ),
+    radial-gradient(circle at 50% 45%, rgba(26, 22, 12, 0.85), transparent 70%);
+  /* Must match HANDOFF_MS in PackOpening. */
+  transition: opacity 300ms ease;
+}
+
+.gp-float:active {
+  cursor: grabbing;
+}
+
+.gp-float--leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.gp-float__canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.gp-float__canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Invisible ruler: the DOM pack size the 3D camera must match at handoff. */
+.gp-float__probe {
+  width: var(--gp-pack-w);
+  /* 必須跟 packOpenEngine.ts 的 PACK_ART_ASPECT 一致：這個尺規決定 3D 相機的 fit 比例，
+     比例對不上相機就會算錯距離。 */
+  aspect-ratio: 864 / 1520;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.gp-float__hint {
+  position: absolute;
+  /* Sits just above the control buttons so it can never touch the slab. */
+  bottom: calc(max(18px, env(safe-area-inset-bottom)) + 56px);
+  left: 50%;
+  translate: -50%;
+  font-size: clamp(11px, 2.4vw, 14px);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(235, 231, 222, 0.62);
+  pointer-events: none;
+  white-space: nowrap;
+  animation: gp-hint-in 520ms ease-out both;
+}
+
+/* ------------------------------------------------------- tear opening */
+
+@keyframes gp-tear-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.gp-tear {
+  animation: gp-tear-in 260ms ease-out both;
+  /* Sized off the slab so it is already at hero scale behind the pack — the
+     handover to the reveal layer then costs no size jump. At this ratio the
+     2:3 pack is a hair taller than the 13:23 slab, so nothing pokes out. */
+  --gp-pack-w: calc(var(--gp-slab-w) / 0.84);
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      color-mix(in srgb, var(--gp-tear-color) 18%, transparent),
+      transparent 58%
+    ),
+    radial-gradient(circle at 50% 45%, rgba(26, 22, 12, 0.85), transparent 70%);
+}
+
+.gp-tear__stage {
+  position: relative;
+  width: var(--gp-pack-w);
+  aspect-ratio: 2 / 3;
+  perspective: 900px;
+  /* The tear and pull are both drags, so the browser must not claim them for
+     scrolling — without this the gesture dies on the first touchmove. */
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+}
+
+.gp-tear__stage[data-phase="tearing"],
+.gp-tear__stage[data-phase="pulling"] {
+  cursor: grabbing;
+}
+
+.gp-tear__stage[data-phase="opened"] {
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Holds the slab behind the pack. Only z-order hides it — as the pack slides
+   down the slab is uncovered top-first, so the matte label appears before any
+   of the card, which is the whole peek effect. */
+.gp-tear__slot {
+  --gp-pull: 0;
+  position: absolute;
+  left: 50%;
+  top: 0.5%;
+  translate: -50% 0;
+  z-index: 1;
+  display: grid;
+  place-items: start center;
+  scale: calc(0.975 + var(--gp-pull) * 0.025);
+}
+
+/* Pointer-follow tilt lives on its own wrapper because the pull animation
+   writes inline transforms to the pack itself. */
+.gp-tear__lift {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  transform: rotateY(calc(var(--gp-ptx, 0) * 6deg)) rotateX(calc(var(--gp-pty, 0) * -5deg));
+  transition: transform 180ms ease-out;
+  will-change: transform;
+  animation: gp-lift-bob 5.2s ease-in-out infinite;
+}
+
+@keyframes gp-lift-bob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -0.9%;
+  }
+}
+
+/* Once the pack starts sliding, the tilt and bob must freeze flat — a tilted
+   pack over a straight slab reads as a rendering glitch. */
+.gp-tear__stage[data-phase="torn"] .gp-tear__lift,
+.gp-tear__stage[data-phase="pulling"] .gp-tear__lift,
+.gp-tear__stage[data-phase="opened"] .gp-tear__lift {
+  transform: none;
+  animation: none;
+}
+
+/* Before the pack is torn, the slab must never be paintable — the tilt could
+   otherwise expose its edges behind the pack silhouette. */
+.gp-tear__stage[data-phase="sealed"] .gp-tear__slot,
+.gp-tear__stage[data-phase="tearing"] .gp-tear__slot {
+  visibility: hidden;
+}
+
+.gp-tear__pack {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+  /* One shadow for the whole pack. Shadowing each piece separately made the
+     strip cast onto the body along the cut, which read as stacked layers. */
+  filter: drop-shadow(0 22px 40px rgba(0, 0, 0, 0.55));
+}
+
+/* No background-color and no radius: the artwork carries its own alpha, so the
+   pack's drop-shadow hugs the real foil silhouette including the crimped top. */
+.gp-tear__piece {
+  position: absolute;
+  inset: 0;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.gp-tear__piece--body {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+}
+
+.gp-tear__piece--strip {
+  /* Starts with zero area; the clip grows as the cut travels. */
+  clip-path: polygon(0% 0%, 0% 0%, 0% 0%);
+  transform-origin: 0% 50%;
+}
+
+/* A soft moving highlight that follows the pointer, clipped to the foil's
+   alpha via mask-image. Plain alpha gradient on purpose: blend modes inside a
+   perspective subtree leak in Chrome. */
+.gp-tear__sheen {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  transition: opacity 240ms ease;
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  background: radial-gradient(
+    ellipse 55% 42% at
+      calc(50% + var(--gp-ptx, 0) * 34%)
+      calc(42% + var(--gp-pty, 0) * 30%),
+    rgba(255, 250, 235, 0.17),
+    rgba(255, 250, 235, 0.05) 55%,
+    transparent 75%
+  );
+}
+
+/* The mask covers the whole foil silhouette, so once the strip is gone the
+   sheen would glow in empty air above the cut — drop it with the strip. */
+.gp-tear__stage[data-phase="torn"] .gp-tear__sheen,
+.gp-tear__stage[data-phase="pulling"] .gp-tear__sheen,
+.gp-tear__stage[data-phase="opened"] .gp-tear__sheen {
+  opacity: 0;
+}
+
+.gp-tear__fx {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.gp-tear__hint {
+  position: absolute;
+  bottom: 12%;
+  left: 50%;
+  translate: -50%;
+  font-size: clamp(10px, 2.4vw, 13px);
+  font-weight: 600;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgba(235, 231, 222, 0.62);
+  pointer-events: none;
+  white-space: nowrap;
+  animation: gp-hint-in 520ms ease-out both;
+}
+
+@keyframes gp-hint-in {
+  from {
+    opacity: 0;
+    translate: -50% 8px;
+  }
+  to {
+    opacity: 1;
+    translate: -50% 0;
+  }
+}
+
+/* ---------------------------------------------------------- graded slab */
+
+.gp-slab {
+  position: relative;
+  width: var(--gp-slab-w);
+  /* PSA outer case is 3.25 x 5.75in; keeping the real ratio is what sells it. */
+  aspect-ratio: 13 / 23;
+  perspective: 1600px;
+  flex: none;
+  container-type: inline-size;
+}
+
+.gp-slab__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateY(var(--gp-flip, 180deg)) rotateX(calc(var(--gp-ty, 0) * -7deg))
+    rotateZ(calc(var(--gp-tx, 0) * 1.2deg));
+  transition: transform 700ms cubic-bezier(0.16, 0.9, 0.28, 1);
+  will-change: transform;
+}
+
+.gp-slab--instant .gp-slab__inner {
+  transition: none;
+}
+
+.gp-slab__face {
+  position: absolute;
+  inset: 0;
+  border-radius: 3cqw;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+}
+
+/* The acrylic shell: a cold, near-clear body with a bright bevel on the edges
+   and nothing else, so every warm highlight in frame belongs to the card. */
+.gp-slab__front {
+  background:
+    linear-gradient(158deg, rgba(58, 58, 62, 0.42), rgba(8, 8, 10, 0.86) 56%),
+    #050506;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.13),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.32),
+    inset 0 -1.5px 0 rgba(255, 255, 255, 0.09),
+    0 26px 60px -16px rgba(0, 0, 0, 0.95),
+    0 0 var(--gp-slab-glow, 0px) color-mix(in srgb, var(--gp-rarity) 45%, transparent);
+}
+
+/* The moulded lip around the sealed card well. Two hairlines and a soft inner
+   falloff is enough to read as 3mm of acrylic without another image. */
+.gp-slab__front::after {
+  content: "";
+  position: absolute;
+  left: 9.5%;
+  right: 9.5%;
+  top: 21.4%;
+  bottom: 12.4%;
+  border-radius: 2cqw;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 0 22px rgba(0, 0, 0, 0.55);
+}
+
+.gp-slab__label {
+  position: absolute;
+  left: 6.5%;
+  right: 6.5%;
+  top: 3.4%;
+  height: 17%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: 1fr auto;
+  align-items: center;
+  gap: 0 3cqw;
+  padding: 2.6cqw 3.4cqw 2cqw;
+  border-radius: 1.6cqw;
+  /* Anti-glare matte black: a flat dark base plus a very fine directional
+     grain. No specular layer at all — that is what reads as "消光". */
+  background-color: #0b0b0c;
+  background-image:
+    repeating-linear-gradient(
+      116deg,
+      rgba(255, 255, 255, 0.014) 0 1px,
+      rgba(0, 0, 0, 0) 1px 4px
+    ),
+    linear-gradient(180deg, #141416, #08080a 70%, #0d0d0f);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.11),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.055),
+    inset 0 -14px 26px -18px rgba(255, 255, 255, 0.09),
+    0 6px 18px rgba(0, 0, 0, 0.72);
+}
+
+/* Sonic-weld seam: the faint ring pressed into every graded case. Cheap, and
+   it is the detail that stops the slab reading as a flat rounded rectangle. */
+.gp-slab__front::before {
+  content: "";
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  top: 2.2%;
+  bottom: 2.2%;
+  border-radius: 2.2cqw;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.055),
+    inset 0 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+.gp-slab__wordmark {
+  grid-column: 1;
+  grid-row: 1;
+  width: auto;
+  height: 5.2cqw;
+  object-fit: contain;
+  object-position: left center;
+  justify-self: start;
+  align-self: center;
+  user-select: none;
+  /* Printed into the matte, not sitting on top of it. */
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.8));
+}
+
+.gp-slab__grade {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 1.4cqw;
+  color: #f5f3ee;
+}
+
+.gp-slab__grade-name {
+  font-size: 3.1cqw;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.gp-slab__grade-score {
+  font-size: 7.4cqw;
+  font-weight: 800;
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  color: #fec508;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.85),
+    0 0 16px rgba(254, 197, 8, 0.3);
+}
+
+.gp-slab__cert {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  justify-content: space-between;
+  gap: 3cqw;
+  padding-top: 1.6cqw;
+  border-top: 1px solid rgba(254, 197, 8, 0.42);
+  font-size: 2.3cqw;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(226, 226, 226, 0.66);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.gp-slab__cert span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gp-slab__window {
+  position: absolute;
+  left: 11.5%;
+  width: 77%;
+  top: 23%;
+}
+
+.gp-slab__window .gp-card {
+  width: 100%;
+}
+
+/* One soft diagonal band that leans with the pointer — the only highlight the
+   acrylic gets, so the matte label stays matte next to it. */
+.gp-slab__gloss {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    calc(108deg + var(--gp-tx, 0) * 16deg),
+    transparent 40%,
+    rgba(255, 255, 255, 0.07) 48%,
+    transparent 58%
+  );
+}
+
+.gp-slab__back {
+  transform: rotateY(180deg);
+  background:
+    linear-gradient(160deg, rgba(52, 52, 56, 0.45), rgba(7, 7, 9, 0.86)),
+    #050506;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 26px 60px -16px rgba(0, 0, 0, 0.95);
+  display: grid;
+  place-items: center;
+}
+
+.gp-slab__back-mark {
+  width: 46%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(254, 197, 8, 0.3), transparent 68%);
+  box-shadow: inset 0 0 0 1px rgba(254, 197, 8, 0.28);
+}
+
+/* --------------------------------------------------- reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .gp-root *,
+  .gp-root *::before,
+  .gp-root *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+/* ---------------------------------------------------- graded slab shell */
+
+.gp-slab {
+  /* 換卡殼只要覆蓋這個變數，元件本身不用動。 */
+  --gp-slab-frame: url("assets/slab-frame.webp");
+  position: relative;
+  width: var(--gp-card-w);
+  /* 卡殼比卡片瘦長，比例取自圖檔本身的 347x557。 */
+  aspect-ratio: 347 / 557;
+  flex: none;
+}
+
+/* 圖的透明視窗：左右各 5.8%、上下各 3.8%，量自圖檔的 alpha 通道。 */
+.gp-slab__window {
+  position: absolute;
+  inset: 3.8% 5.8%;
+  display: grid;
+  place-items: center;
+}
+
+/* 包進來的東西撐滿視窗寬度，高度由它自己的比例決定，上下自然留出卡殼的邊。 */
+.gp-slab .gp-card,
+.gp-slab .gp-slab__window > * {
+  width: 100%;
+}
+
+.gp-slab__frame {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: var(--gp-slab-frame);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}

@@ -1,0 +1,13 @@
+{
+  "name": "godpack-psa10-sim",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GodPack PSA 10 抽卡模擬器（靜態單頁，3D 撕包引擎）",
+  "scripts": {
+    "build": "esbuild src/main.ts --bundle --minify --format=iife --global-name=GodPackOpen3D --target=es2020 --outfile=opening3d.bundle.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.2",
+    "three": "^0.167.1"
+  }
+}
