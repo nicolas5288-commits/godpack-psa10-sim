@@ -3,23 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>GodPack PSA 10 抽卡模擬器</title>
+  <title>GodPack PSA 10 開包</title>
   <meta name="description" content="3D 撕開 GodPack，每一包都是 PSA 10 鑑定卡。免費體驗版，抽到什麼全看手氣。" />
   <meta name="theme-color" content="#050508" />
-  <meta property="og:title" content="GodPack PSA 10 抽卡模擬器" />
+  <meta property="og:title" content="GodPack PSA 10 開包" />
   <meta property="og:description" content="3D 撕開 GodPack，每一包都是 PSA 10 鑑定卡。抽到什麼全看手氣。" />
   <meta property="og:image" content="assets/pack-art.webp" />
   <link rel="icon" href="assets/gp-logo.webp" />
-  <link rel="stylesheet" href="opening3d.css?v=6" />
-  <link rel="stylesheet" href="style.css?v=6" />
+  <link rel="stylesheet" href="opening3d.css?v=7" />
+  <link rel="stylesheet" href="style.css?v=7" />
 </head>
 <body>
   <header class="sim-header">
     <div class="sim-brand">
       <img src="assets/gp-logo.webp" alt="GodPack" />
       <div>
-        <div class="t">GODPACK <em>PSA 10</em> SIM</div>
-        <div class="sub">3D 抽卡模擬器 · 免費體驗</div>
+        <div class="t">GODPACK <em>PSA 10</em></div>
+        <div class="sub">3D 開包 · 免費體驗</div>
       </div>
     </div>
     <div class="sim-stats">
@@ -41,7 +41,7 @@
     <div class="sim-pack-hero" id="home-pack">
       <img src="assets/pack-art.webp" alt="GodPack" />
     </div>
-    <div class="sim-price-row"><span class="p" id="home-price">$99</span><span class="n">/ PACK · 模擬不收費</span></div>
+    <div class="sim-price-row"><span class="p" id="home-price">$99</span><span class="n">/ PACK</span></div>
     <div class="sim-btn-row"><button class="sim-btn" id="btn-open">撕一包</button></div>
     <div class="sim-odds" id="home-odds"></div>
   </main>
@@ -88,13 +88,13 @@
     <div class="box">
       <h3>抽卡賠率</h3>
       <table id="odds-table"></table>
-      <p>每一張都是 PSA 10（GEM MINT 10）鑑定卡。卡價取自 PriceCharting 近期市價（美元），只作模擬展示，不販售、不代表真實抽卡結果。</p>
+      <p>每一張都是 PSA 10（GEM MINT 10）鑑定卡。卡價取自 PriceCharting 近期市價（美元）。</p>
       <div class="sim-btn-row"><button class="sim-btn ghost sm" id="btn-odds-close">關閉</button></div>
     </div>
   </div>
 
-  <script src="opening3d.bundle.js?v=6"></script>
-  <script src="cards.js?v=6"></script>
-  <script src="app.js?v=6"></script>
+  <script src="opening3d.bundle.js?v=7"></script>
+  <script src="cards.js?v=7"></script>
+  <script src="app.js?v=7"></script>
 </body>
 </html>
