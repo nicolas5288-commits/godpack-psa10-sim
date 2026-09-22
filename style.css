@@ -241,3 +241,17 @@ img { display: block; }
 @media (prefers-reduced-motion: reduce) {
   .sim-pack-hero, .sim-btn::after { animation: none; }
 }
+
+/* ---------- 3D 舞台尺寸微調（蓋過 opening3d.css 預設） ---------- */
+.sim-stage .gp-root {
+  --gp-card-w: clamp(170px, 38vw, 250px);
+  --gp-slab-w: min(calc(var(--gp-card-w) / 0.77), 30vh);
+}
+.sim-stage .gp-banner--rarity { top: 6%; }
+.sim-stage .gp-float__hint { bottom: max(18px, env(safe-area-inset-bottom)); }
+.sim-info {
+  bottom: 0;
+  padding-top: 48px;
+  padding-bottom: max(14px, env(safe-area-inset-bottom));
+  background: linear-gradient(to top, rgba(5, 5, 8, 0.94) 62%, transparent);
+}
