@@ -182,7 +182,7 @@
 
   /* ---------- 鑑定磚 HTML（移植 Cards/Slab.tsx、CardBackSlab.tsx） ---------- */
   function slabWidth() {
-    return Math.min(300, Math.floor(window.innerWidth * 0.72), Math.floor(window.innerHeight * 0.42));
+    return Math.min(300, Math.floor(window.innerWidth * 0.72), Math.floor(window.innerHeight * 0.38));
   }
   const SHELL = "linear-gradient(155deg, #5f5a50 0%, #423d35 24%, #2a2621 55%, #464139 82%, #5f5a50 100%)";
 
