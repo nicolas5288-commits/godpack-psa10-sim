@@ -79,6 +79,7 @@ img { display: block; }
 .gp-stats b { display: block; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px; color: var(--godpack-text); }
 .gp-stats .gold b { color: var(--godpack-accent); }
 .gp-iconbtn {
+  white-space: nowrap;
   border: 1px solid var(--godpack-line);
   background: var(--godpack-panel);
   color: var(--godpack-muted);
@@ -404,10 +405,13 @@ img { display: block; }
 .gp-modal p { font-size: 12px; color: var(--godpack-muted); line-height: 1.6; }
 
 @media (max-width: 560px) {
-  .gp-stats { gap: 10px; }
-  .gp-stats .hide-m { display: none; }
+  .gp-header { flex-wrap: wrap; padding: 8px 12px; gap: 8px; }
+  .gp-brand { flex: 1; }
+  .gp-brand .t { font-size: 13px; }
   .gp-brand .sub { display: none; }
-  .gp-main { padding-bottom: 130px; }
+  .gp-stats { order: 3; width: 100%; justify-content: space-around; gap: 10px; padding-top: 6px; border-top: 1px solid var(--godpack-line); }
+  .gp-stats b { font-size: 13px; }
+  .gp-main { min-height: calc(100dvh - 92px); padding-bottom: 130px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .godpack-float, .gp-rays, .godpack-glow-3, .godpack-glow-4 { animation: none; }
